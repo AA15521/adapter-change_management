@@ -5,7 +5,7 @@ const validResponseRegex = /(2\d\d)/;
 class ServiceNowConnector {
 
   constructor(options) {
-    this.options = options;
+    this.options = options;    
   }
 
   constructUri(serviceNowTable, query = null) {
@@ -14,7 +14,7 @@ class ServiceNowConnector {
     if (query) {
       uri = uri + '?' + query;
     }
-    console.log("URI:" + uri);
+    
     return uri;
   }
 
@@ -51,20 +51,19 @@ class ServiceNowConnector {
      uri = this.constructUri(callOptions.serviceNowTable, callOptions.query);
    else
      uri = this.constructUri(callOptions.serviceNowTable);
- 
-   console.log("sendRequest:" + uri);
+    
    const requestOptions = {
      method: callOptions.method,
      auth: {
-       user: main.options.user,
-       pass: main.options.password,
+       user: callOptions.username,
+       pass: callOptions.password,
      },
-     baseUrl: main.options.url,
+     baseUrl: callOptions.url,
      uri: uri
    };
-  
+   
    request(requestOptions, (error, response, body) => {
-     processRequestResults(error, response, body, (processedResults, processedError) => callback(processedResults, processedError));
+     this.processRequestResults(error, response, body, (processedResults, processedError) => callback(processedResults, processedError));
   });
 }
 
@@ -72,12 +71,15 @@ get(callback) {
     let getCallOptions = { ...this.options };
     getCallOptions.method = 'GET';
     getCallOptions.query = 'sysparm_limit=1';
+    
     this.sendRequest(getCallOptions, (results, error) => callback(results, error));
   }
 
-post(callOptions, callback) {
-  callOptions.method = 'POST';
-  this.sendRequest(callOptions, (results, error) => callback(results, error));
+post(callback) {
+    let getCallOptions = { ...this.options };
+    getCallOptions.method = 'POST';
+    
+    this.sendRequest(getCallOptions, (results, error) => callback(results, error));
 }
 
 }
