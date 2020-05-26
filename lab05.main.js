@@ -23,18 +23,10 @@ class ServiceNowAdapter extends EventEmitter {
   
   connect() {
     this.healthcheck();
-  } 
+  }
   
-  healthcheck() {
-      this.getRecord((result, error) => {
-          if (error) {
-              log.warn('ServiceNow: Instance is OFFLINE.');
-              this.emitOffline();
-          } else if(result) {
-              log.warn('ServiceNow: Instance is ONLINE.');
-              this.emitOnline();
-          }
-      });
+  healthcheck(callback) {
+    this.emitOnline();
   }
 
   emitOffline() {
