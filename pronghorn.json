@@ -16,11 +16,14 @@
       "input": [],
       "output": {
         "name": "changeTicket",
-        "type": "object",
+        "type": "array",
         "description": "The first change change management ticket document.",
         "schema": {
-          "title": "changeTicket",
-          "$ref": "changeRequest#/definitions/changeTicket"
+          "type": "array",
+          "items": {
+            "title": "changeTicket",
+            "$ref": "changeRequest#/definitions/changeTicket"
+          }
         }
       },
       "roles": [
