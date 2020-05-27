@@ -18,14 +18,21 @@ class ServiceNowAdapter extends EventEmitter {
     super();
 
     this.id = id;
-    this.props = adapterProperties;    
+    //this.props = adapterProperties;
+    this.props = options;
 
-    this.connector = new ServiceNowConnector({        
+    /*this.connector = new ServiceNowConnector({        
       url: this.props.url,
       username: this.props.auth.username,
       password: this.props.auth.password,
       serviceNowTable: this.props.serviceNowTable
-    });    
+    });*/
+    this.connector = new ServiceNowConnector({        
+      url: this.props.url,
+      username: this.props.username,
+      password: this.props.password,
+      serviceNowTable: this.props.serviceNowTable
+    });   
   }
   
   connect() {
@@ -62,7 +69,7 @@ class ServiceNowAdapter extends EventEmitter {
 
   getRecord(callback) {
       console.log("getRecord is called");
-      log.info('calling getRecord method.');
+      //log.info('calling getRecord method.');
 
       let callbackData = null;
       let callbackError = null;
@@ -78,22 +85,24 @@ class ServiceNowAdapter extends EventEmitter {
                 console.log("String: " + jsonObj.result[0].number);
                 
                 var obj = {};
-                obj["change_ticket_number"] = jsonObj.result[0].number;
-                obj["active"]               = jsonObj.result[0].active;
-                obj["priority"]             = jsonObj.result[0].priority;
-                obj["description"]          = jsonObj.result[0].description;
-                obj["work_start"]           = jsonObj.result[0].work_start;
-                obj["work_end"]             = jsonObj.result[0].work_end;   
-                obj["change_ticket_key"]    = jsonObj.result[0].sys_id;
-          }        
-      
+                obj["number"]       = jsonObj.result[0].number;
+                obj["active"]       = jsonObj.result[0].active;
+                obj["priority"]     = jsonObj.result[0].priority;
+                obj["description"]  = jsonObj.result[0].description;
+                obj["work_start"]   = jsonObj.result[0].work_start;
+                obj["work_end"]     = jsonObj.result[0].work_end;   
+                obj["sys_id"]       = jsonObj.result[0].sys_id;
+          }
+        
+        //console.log ("callbackData: " + callbackData + " ERROR: " + callbackError);
+        //log.warn ("callbackData: " + callbackData + " ERROR: " + callbackError);
         return callback(obj, callbackError);
       });
   }
 
   postRecord(callback) {
       console.log('calling postRecord method.');
-      log.info('calling postRecord method.');
+      //log.info('calling postRecord method.');
       
       let callbackError = null;
             
@@ -120,6 +129,23 @@ class ServiceNowAdapter extends EventEmitter {
         return callback(obj, callbackError);
       });
   }
+  
+  
 }
 
-module.exports = ServiceNowAdapter;
+//module.exports = ServiceNowAdapter;
+
+function mainOnObject()
+{
+      const connector = new ServiceNowAdapter(options);
+
+      connector.postRecord((data, error) => {
+                                    if (error) {
+                                        console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
+                                    }
+                                    console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
+                                 });
+      
+}
+
+mainOnObject();
