@@ -40,9 +40,10 @@ class ServiceNowAdapter extends EventEmitter {
           if (error) {
               log.warn('ServiceNow: Instance is OFFLINE.');
               this.emitOffline();
+          } else {
+                log.warn('ServiceNow: Instance is ONLINE.');
+                this.emitOnline();
           }
-            log.warn('ServiceNow: Instance is ONLINE.');
-            this.emitOnline();          
       });
   }
 
