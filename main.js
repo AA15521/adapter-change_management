@@ -85,9 +85,11 @@ class ServiceNowAdapter extends EventEmitter {
                 obj["work_start"]           = jsonObj.result[0].work_start;
                 obj["work_end"]             = jsonObj.result[0].work_end;   
                 obj["change_ticket_key"]    = jsonObj.result[0].sys_id;
+
+                var arrObj = [obj];
           }        
       
-        return callback(obj, callbackError);
+        return callback(arrObj, callbackError);
       });
   }
 

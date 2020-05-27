@@ -92,11 +92,13 @@ class ServiceNowAdapter extends EventEmitter {
                 obj["work_start"]   = jsonObj.result[0].work_start;
                 obj["work_end"]     = jsonObj.result[0].work_end;   
                 obj["sys_id"]       = jsonObj.result[0].sys_id;
+
+                var arrObj = [obj];
           }
         
         //console.log ("callbackData: " + callbackData + " ERROR: " + callbackError);
         //log.warn ("callbackData: " + callbackData + " ERROR: " + callbackError);
-        return callback(obj, callbackError);
+        return callback(arrObj, callbackError);
       });
   }
 
@@ -138,6 +140,13 @@ class ServiceNowAdapter extends EventEmitter {
 function mainOnObject()
 {
       const connector = new ServiceNowAdapter(options);
+
+      connector.getRecord((data, error) => {
+                                    if (error) {
+                                        console.error(`\nError returned from GET request:\n${JSON.stringify(error)}`);
+                                    }
+                                    console.log(`\nResponse returned from GET request:\n${JSON.stringify(data)}`)
+                                 });
 
       connector.postRecord((data, error) => {
                                     if (error) {
